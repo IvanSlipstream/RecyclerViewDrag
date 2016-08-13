@@ -16,22 +16,24 @@ import java.util.Collections;
 public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter {
 
     Context context;
-    ArrayList<String> items;
+    ArrayList<RecyclerObject> items;
 
-    public MainRecyclerAdapter(Context context, ArrayList<String> items) {
+    public MainRecyclerAdapter(Context context, ArrayList<RecyclerObject> items) {
         this.items = items;
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_contact_item,parent,false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((MyViewHolder) holder).textView.setText("Item - "+position);
+        RecyclerObject ro = items.get(position);
+        ((MyViewHolder) holder).tvName.setText(ro.getName());
+        ((MyViewHolder) holder).tvPhone.setText(ro.getPhone());
     }
 
     @Override
@@ -61,9 +63,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
 
     private class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
+        public TextView tvPhone;
+        public TextView tvName;
         public MyViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(android.R.id.text1);
+            tvName = (TextView) itemView.findViewById(R.id.tvNameContactItem);
+            tvPhone = (TextView) itemView.findViewById(R.id.tvPhoneContactItem);
         }
     }
 }

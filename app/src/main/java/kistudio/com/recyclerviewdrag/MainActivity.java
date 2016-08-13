@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    ArrayList<RecyclerObject> contacts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,9 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rvMain);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<String> items = new ArrayList<>();
-        fillArrayList(items);
-        MainRecyclerAdapter adapter = new MainRecyclerAdapter(this,items);
+        contacts = new ArrayList<>();
+        ProviderUtils.fillContacts(this, contacts);
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, contacts);
         rv.setAdapter(adapter);
         ItemTouchHelper.Callback callback =
                 new SimpleItemTouchHelperCallback(adapter);
@@ -30,9 +32,12 @@ public class MainActivity extends AppCompatActivity {
         touchHelper.attachToRecyclerView(rv);
     }
 
-    private void fillArrayList(ArrayList<String> items) {
-        for (int i =0; i<25; i++){
-            items.add("Position - "+i);
-        }
-    }
+
+//    private void fillArrayList(ArrayList<String> contacts) {
+//        for (int i =0; i<25; i++){
+//            contacts.add("Position - "+i);
+//        }
+//    }
+
+
 }
