@@ -49,7 +49,9 @@ public class ProviderUtils {
                 null
         );
         if (c != null && c.getCount() != 0) {
-            number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            c.moveToFirst();
+            int index = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            number = c.getString(index);
             c.close();
         }
         return number;
