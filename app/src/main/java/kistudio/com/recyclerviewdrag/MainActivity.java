@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rvMain);
         rv.setLayoutManager(new LinearLayoutManager(this));
         contacts = new ArrayList<>();
-        ProviderUtils.fillContacts(this, contacts);
+//        ProviderUtils.fillContacts(this, contacts);
+        ProviderUtils.getCallHistory(this, contacts);
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, contacts);
         rv.setAdapter(adapter);
         ItemTouchHelper.Callback callback =

@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,6 +42,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
         ((MyViewHolder) holder).tvName.setText(ro.getName());
         ((MyViewHolder) holder).tvPhone.setText(ro.getPhone());
         ((MyViewHolder) holder).itemView.setOnClickListener(new RoOnClickListener(ro, holder.itemView.getContext()) {});
+        ((MyViewHolder) holder).itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        v.setBackgroundColor(Color.rgb(210, 210, 210));
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        v.setBackgroundColor(Color.WHITE);
+                        v.callOnClick();
+                        return true;
+                }
+            return false;
+            }
+        });
     }
 
     @Override
