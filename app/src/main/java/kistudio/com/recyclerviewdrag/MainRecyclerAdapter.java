@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -105,7 +106,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
 
     }
 
-    public class RoOnClickListener implements View.OnClickListener {
+    public class RoOnClickListener implements View.OnClickListener, View.OnLongClickListener {
 
         private final RecyclerObject ro;
         private final Context context;
@@ -164,6 +165,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            SoundPool soundPool = new SoundPool.Builder()
+                    .setMaxStreams(5).build();
+            return true;
         }
     }
 }
