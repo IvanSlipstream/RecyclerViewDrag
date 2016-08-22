@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<RecyclerObject> contacts;
+    MainRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rvMain);
+        assert rv != null;
         rv.setLayoutManager(new LinearLayoutManager(this));
         contacts = new ArrayList<>();
 //        ProviderUtils.fillContacts(this, contacts);
-        ProviderUtils.getCallHistory(this, contacts);
-        MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, contacts);
+        ProviderUtils.getMusic(this, contacts);
+        adapter = new MainRecyclerAdapter(this, contacts);
         rv.setAdapter(adapter);
         ItemTouchHelper.Callback callback =
                 new SimpleItemTouchHelperCallback(adapter);
@@ -33,8 +35,13 @@ public class MainActivity extends AppCompatActivity {
         touchHelper.attachToRecyclerView(rv);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.listener.onStopActivity();
+    }
 
-//    private void fillArrayList(ArrayList<String> contacts) {
+    //    private void fillArrayList(ArrayList<String> contacts) {
 //        for (int i =0; i<25; i++){
 //            contacts.add("Position - "+i);
 //        }

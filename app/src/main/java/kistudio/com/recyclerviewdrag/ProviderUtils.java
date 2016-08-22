@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 
 import java.util.ArrayList;
@@ -59,6 +60,21 @@ public class ProviderUtils {
             c.close();
         }
         return number;
+    }
+
+    public static void getMusic(Context context, ArrayList<RecyclerObject> result){
+        Cursor c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, null, null, null);
+        if (c != null) {
+            while (c.moveToNext()){
+                RecyclerObject ro = new RecyclerObject();
+                ro.setId((int) c.getLong(c.getColumnIndex(MediaStore.Audio.Media._ID)));
+                ro.setName(c.getString((c.getColumnIndex(MediaStore.Audio.Media.TITLE))));
+                ro.setPhone(c.getString((c.getColumnIndex(MediaStore.Audio.Media.ARTIST))));
+                result.add(ro);
+            }
+            c.close();
+        }
     }
 
     public static void getCallHistory(Context context, ArrayList<RecyclerObject> historyList) {

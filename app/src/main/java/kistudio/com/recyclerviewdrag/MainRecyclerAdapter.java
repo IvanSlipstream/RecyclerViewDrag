@@ -1,11 +1,15 @@
 package kistudio.com.recyclerviewdrag;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -24,6 +29,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
 
     Context context;
     ArrayList<RecyclerObject> items;
+    RoOnClickListener listener;
 
     public MainRecyclerAdapter(Context context, ArrayList<RecyclerObject> items) {
         this.items = items;
@@ -39,9 +45,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         RecyclerObject ro = items.get(position);
+        listener = new RoOnClickListener(ro, holder.itemView.getContext());
         ((MyViewHolder) holder).tvName.setText(ro.getName());
         ((MyViewHolder) holder).tvPhone.setText(ro.getPhone());
-        ((MyViewHolder) holder).itemView.setOnClickListener(new RoOnClickListener(ro, holder.itemView.getContext()) {});
+        ((MyViewHolder) holder).itemView.setOnClickListener(listener);
         ((MyViewHolder) holder).itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -84,7 +91,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
         notifyItemMoved(fromPosition, toPosition);
     }
 
-    private class MyViewHolder extends RecyclerView.ViewHolder {
+    private static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public TextView tvPhone;
         public TextView tvName;
@@ -95,33 +102,66 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
             tvName = (TextView) itemView.findViewById(R.id.tvNameContactItem);
             tvPhone = (TextView) itemView.findViewById(R.id.tvPhoneContactItem);
         }
+
     }
 
-    private class RoOnClickListener implements View.OnClickListener {
+    public class RoOnClickListener implements View.OnClickListener {
 
         private final RecyclerObject ro;
         private final Context context;
+        private MediaPlayer mediaPlayer;
 
         public RoOnClickListener(RecyclerObject ro, Context c) {
             this.ro = ro;
             this.context = c;
         }
 
+//        @Override
+//            public void onClick(View v) {
+//                mediaPlayer = new MediaPlayer();
+//                try {
+//                    mediaPlayer.setDataSource(context, ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, ro.getId()));
+//                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                    mediaPlayer.prepare();
+//                    mediaPlayer.start();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+
+
+//            Intent intent = new Intent(Intent.ACTION_CALL);
+//            intent.setData(Uri.parse("tel:" + ro.getPhone()));
+//            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                // TODO: Consider calling
+//                //    ActivityCompat#requestPermissions
+//                // here to request the missing permissions, and then overriding
+//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                //                                          int[] grantResults)
+//                // to handle the case where the user grants the permission. See the documentation
+//                // for ActivityCompat#requestPermissions for more details.
+//                return;
+//            }
+//            context.startActivity(intent);
+
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" + ro.getPhone()));
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
+            mediaPlayer = new MediaPlayer();
+            try {
+//                mediaPlayer.setDataSource("http://dl.dropboxusercontent.com/u/6197740/explosion.mp3");
+                mediaPlayer.setDataSource("http://online.radiorecord.ru:8101/rr_128");
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            context.startActivity(intent);
+        }
+
+        public void onStopActivity(){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 }
