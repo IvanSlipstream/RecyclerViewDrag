@@ -159,9 +159,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter implements ItemTou
         }
 
         public void onStopActivity(){
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
         }
     }
 }
